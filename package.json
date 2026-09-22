@@ -1,0 +1,25 @@
+{
+  "name": "zakhruf-hono-svelte",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"wrangler dev --port 8787\"",
+    "dev:remote": "concurrently \"npm run dev --prefix frontend\" \"wrangler dev --remote --port 8787\"",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:server": "wrangler dev --port 8787",
+    "build": "npm run build --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend",
+    "deploy": "npm run build:frontend && wrangler deploy",
+    "db:generate": "npm --workspace=backend run db:generate",
+    "db:migrate": "wrangler d1 migrations apply zakhruf-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply zakhruf-db --remote"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "wrangler": "^3.114.16"
+  }
+}
