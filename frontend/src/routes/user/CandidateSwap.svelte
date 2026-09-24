@@ -146,6 +146,7 @@
 
   function confirmAjak() {
     if (!confirmTarget) return;
+    if (ajakCount >= 5) return; // maximum Ajakanku reached; do not exceed displayed /5
     confirmTarget = null;
     doSwipe('ajak');
   }
@@ -307,7 +308,7 @@
       <button
         type="button"
         onclick={() => (confirmTarget = current)}
-        disabled={swipeBusy}
+        disabled={swipeBusy || ajakCount >= 5}
         title="Simpan ke Ajakanku"
         class="w-[62px] h-[62px] rounded-full border-none bg-gradient-to-br from-[#7a9a5e] to-[#5a7a3e] text-[#0a0d06] hover:scale-108 active:scale-95 flex items-center justify-center text-2xl font-bold cursor-pointer transition-transform shadow-xl shadow-[#7a9a5e]/30"
       >

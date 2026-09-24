@@ -66,21 +66,56 @@ eventApp.post(
     if (!cand) return c.json({ success: false, message: 'Kandidat tidak valid' }, 400);
 
     const prefix = cand.gender === 'L' || cand.gender === 'male' ? 'L' : 'P';
+
+    // Idempotent: reuse the existing registration instead of creating duplicates.
+    const existing = await db
+      .select()
+      .from(eventCandidates)
+      .where(and(eq(eventCandidates.eventId, event.id), eq(eventCandidates.candidateId, candidateId)))
+      .get();
+    if (existing) {
+      return c.json({
+        success: true,
+        message: 'Kamu sudah terdaftar di kegiatan ini.',
+        participantNumber: existing.participantNumber,
+        alreadyRegistered: true,
+      });
+    }
+
     const randNumber = Math.floor(100 + Math.random() * 900);
     const participantNumber = `${prefix}-${randNumber}`;
 
-    await db
-      .insert(eventCandidates)
-      .values({
-        eventId: event.id,
-        candidateId,
-        participantNumber,
-        status: 'approved',
-        category: 'mandiri',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      })
-      .run();
+    // Races on the unique (event_id, candidate_id) index throw — catch and
+    // return the idempotent shape instead of a 500.
+    try {
+      await db
+        .insert(eventCandidates)
+        .values({
+          eventId: event.id,
+          candidateId,
+          participantNumber,
+          status: 'approved',
+          category: 'mandiri',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        })
+        .run();
+    } catch (err) {
+      const dup = await db
+        .select()
+        .from(eventCandidates)
+        .where(and(eq(eventCandidates.eventId, event.id), eq(eventCandidates.candidateId, candidateId)))
+        .get();
+      if (dup) {
+        return c.json({
+          success: true,
+          message: 'Kamu sudah terdaftar di kegiatan ini.',
+          participantNumber: dup.participantNumber,
+          alreadyRegistered: true,
+        });
+      }
+      throw err; // non-constraint failure should still surface
+    }
 
     return c.json({
       success: true,

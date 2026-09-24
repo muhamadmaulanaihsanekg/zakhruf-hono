@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 export const users = sqliteTable('users', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -159,7 +159,7 @@ export const eventCandidates = sqliteTable('event_candidates', {
   category: text('category', { enum: ['mandiri', 'delegasi'] }).default('mandiri').notNull(),
   createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at').notNull(),
-});
+}, (t) => [uniqueIndex('idx_event_candidates_event_candidate').on(t.eventId, t.candidateId)]);
 
 export const eventAttendances = sqliteTable('event_attendances', {
   id: integer('id').primaryKey({ autoIncrement: true }),

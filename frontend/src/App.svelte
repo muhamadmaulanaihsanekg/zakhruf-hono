@@ -17,6 +17,14 @@
   import TopikAcak from './routes/events/games/TopikAcak.svelte';
   import Kebenaran from './routes/events/games/Kebenaran.svelte';
   import IniItu from './routes/events/games/IniItu.svelte';
+  import AdminLogin from './routes/admin/Login.svelte';
+  import AdminDashboard from './routes/admin/Dashboard.svelte';
+  import AdminCandidates from './routes/admin/Candidates.svelte';
+  import AdminEvents from './routes/admin/Events.svelte';
+  import AdminEventShow from './routes/admin/EventShow.svelte';
+  import AdminOrgLevels from './routes/admin/OrganizationLevels.svelte';
+  import AdminTimPnkb from './routes/admin/TimPnkb.svelte';
+  import AdminProfile from './routes/admin/Profile.svelte';
 
   const routes = {
     '/': CandidateSwap,
@@ -27,6 +35,15 @@
     '/login': Login,
     '/onboarding': Onboarding,
     '/cek-akun': AccountLookup,
+    '/admin/login': AdminLogin,
+    '/admin': AdminDashboard,
+    '/admin/dashboard': AdminDashboard,
+    '/admin/candidates': AdminCandidates,
+    '/admin/events': AdminEvents,
+    '/admin/events/:slug': AdminEventShow,
+    '/admin/organization': AdminOrgLevels,
+    '/admin/pnkb': AdminTimPnkb,
+    '/admin/profile': AdminProfile,
     '/events': EventList,
     '/events/:slug': EventDetail,
     '/events/:slug/swap': EventSwap,

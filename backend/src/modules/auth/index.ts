@@ -29,15 +29,13 @@ authApp.post('/login', zValidator('json', loginSchema), async (c) => {
     .where(eq(candidates.id, found.id))
     .run();
 
+  const { password: _, ...candidateData } = found;
+
   return c.json({
     success: true,
     token: `cand_${found.id}_${Date.now()}`,
     user: {
-      id: found.id,
-      name: found.fullName,
-      email: found.email,
-      gender: found.gender,
-      alreadyOnboarding: found.alreadyOnboarding,
+      ...candidateData,
       role: 'candidate',
     },
   });

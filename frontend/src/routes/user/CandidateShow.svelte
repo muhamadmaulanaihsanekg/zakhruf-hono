@@ -256,7 +256,7 @@
 
   <!-- Sticky Bottom CTA -->
   {#if !isInvalidGender}
-    <div class="fixed bottom-0 left-0 right-0 bg-[#13151c]/95 backdrop-blur-md border-t border-white/[0.06] p-3.5 z-30 flex justify-center">
+    <div class="fixed bottom-[72px] left-0 right-0 bg-[#13151c]/95 backdrop-blur-md border-t border-white/[0.06] p-3.5 z-30 flex justify-center">
       <div class="w-full max-w-[480px]">
         <button
           type="button"

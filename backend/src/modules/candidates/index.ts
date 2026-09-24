@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { eq, and, ne, desc, sql } from 'drizzle-orm';
+import { eq, and, ne, desc, sql, inArray } from 'drizzle-orm';
 import { getDb, type Bindings } from '../../db';
 import { candidates, candidatePhotos, candidateSwipes, timPnkb } from '../../db/schema';
 
@@ -13,7 +13,8 @@ candidateApp.get('/', async (c) => {
   const currentCandidateId = Number(c.req.query('myId')) || 0;
   const genderFilter = c.req.query('gender'); // 'male' or 'female'
 
-  const conditions = [ne(candidates.id, currentCandidateId), eq(candidates.status, 'aktif')];
+  // Normalize legacy 'aktif' to schema default 'active' so new/onboarded candidates are not hidden.
+  const conditions = [ne(candidates.id, currentCandidateId), inArray(candidates.status, ['active', 'aktif'])];
   if (genderFilter) {
     conditions.push(eq(candidates.gender, genderFilter as any));
   }

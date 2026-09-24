@@ -20,6 +20,7 @@
       active: boolean;
       roomName?: string;
       location?: string;
+      queueId?: number | null;
     };
     children?: Snippet;
   }
@@ -29,7 +30,7 @@
     participantNumber = '042',
     oppositeCount = 74,
     queueInfo = { memanggil: 5, remaining_memanggil: 4, used: 1 },
-    calledState = $bindable({ active: false, roomName: 'Bilik 03', location: 'Lantai 2 — Sayap Barat' }),
+    calledState = $bindable({ active: false, roomName: 'Bilik 03', location: 'Lantai 2 — Sayap Barat', queueId: null }),
     children,
   }: Props = $props();
 
@@ -120,6 +121,18 @@
       <span>Absen</span>
     </a>
   </nav>
+
+  <!-- Persistent reminder pill: a call was dismissed but the queue entry remains -->
+  {#if !calledState.active && calledState.queueId}
+    <button
+      type="button"
+      onclick={() => (calledState.active = true)}
+      class="fixed top-16 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#7aa0c3]/12 border border-[#7aa0c3]/30 text-[#7aa0c3] text-[11px] font-bold cursor-pointer shadow-lg whitespace-nowrap"
+    >
+      <IconUsers size={14} />
+      Dipanggil ke {calledState.roomName}
+    </button>
+  {/if}
 
   <!-- Global Modal: Kamu Dipanggil! -->
   {#if calledState.active}
